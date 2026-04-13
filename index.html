@@ -5,10 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>你到底修什么仙？</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+       footer {
+            text-align: center;
+            margin-top: 50px; /* 增加与上方结果区域的距离 */
+            padding-bottom: 30px;
+            color: #8f7a64;
+        }
+
+        /* 创作者名字的样式 */
+        .footer-copyright {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 8px; /* 给下方留出一点点空隙 */
+            letter-spacing: 1px;
+        }
+
+        /* 温馨提示的样式 */
+        .footer-disclaimer {
+            font-size: 0.75rem; /* 字号比名字稍微小一点点，更有主次感 */
+            color: #a38d78;
+            letter-spacing: 2px; /* 拉开字间距 */
+            /* 注意：这里已经把之前那个 padding-right 删掉了，让它恢复绝对居中 */
         }
         body {
             font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
@@ -139,36 +156,70 @@
             border-radius: 30px;
             padding: 8px;
         }
-        /* 保持原有的外层容器样式不变 */
+
+        /* --- 升级版：结果卡片外层 --- */
         .dao-desc-item {
             text-align: left;
             margin: 15px 0;
             padding: 14px 20px;
-            background: #f3ede6;
-            border-radius: 20px;
+            /* 移除了原本的 background 和 border，改用下面的 main/sub 样式包住它 */
+            border-radius: 16px; /* 更圆润一些 */
             line-height: 1.6;
+            transition: all 0.3s ease; /* 加个淡入淡出动效，更细腻 */
         }
 
-        /* 新增：八字真言行的样式 */
+        /* 主修的专属样式：亮底色 + 深色粗边框 */
+        .dao-desc-item.is-main {
+            background: #fcfaf7; /* 更亮的背景色，突出核心 */
+            border-left: 5px solid #8b6f50; /* 深色粗边框，显眼、稳重 */
+            box-shadow: 0 4px 15px rgba(139, 111, 80, 0.05); /* 淡淡的投影，更有质感 */
+        }
+
+        /* 辅修的专属样式：灰底色 + 浅色细边框 */
+        .dao-desc-item.is-sub {
+            background: #f3ede6; /* 回归原本温柔的底色 */
+            border-left: 5px solid #d8caba; /* 浅色细边框，起到辅助和衬托作用 */
+            opacity: 0.95; /* 稍微透明一点，拉开层次 */
+        }
+
+        /* --- 新增：主辅修小标签 --- */
+        .dao-tag {
+            display: inline-block;
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-right: 8px;
+            vertical-align: text-bottom; /* 标签和文字底端对齐 */
+            font-weight: 400;
+            letter-spacing: 2px; /* 增加字间距，更有禅意 */
+        }
+        .tag-main {
+            background: #6b4e2e; /* 深棕色主色调 */
+            color: #f5efe6; /* 亮色文字 */
+        }
+        .tag-sub {
+            background: #d8caba; /* 浅卡其色 */
+            color: #6b5843; /* 深色文字 */
+        }
+        /* 八字真言行的样式 */
         .dao-quote-title {
             font-size: 1.05rem; /* 稍微大一点，突出重点 */
             color: #3e2e1f;
             margin-bottom: 6px; /* 换行并向下留出间距 */
             font-weight: 500;
         }
-
         /* 强化道名加粗效果 */
         .dao-quote-title strong {
             color: #6b4e2e;
             font-size: 1.15rem;
             margin-right: 4px;
         }
-
-        /* 新增：小字解释文本的样式 */
+        /* 小字解释文本的样式 */
         .dao-desc-text {
             font-size: 0.9rem; /* 设置为小字 */
             color: #7a624b; /* 颜色调浅一点，拉开层次感 */
             text-align: justify; /* 两端对齐，看起来更整齐 */
+            margin-top: 6px;
         }
         .glitch-box {
             font-family: monospace;
@@ -207,7 +258,12 @@
     </div>
 
     <footer>
-       ©莹栀满悦 摸鱼 
+       <div class="footer-copyright">
+           ©莹栀满悦 摸鱼
+       </div>
+       <div class="footer-disclaimer">
+           ※ 本测试结果仅供娱乐 请勿当真 ※
+       </div>
     </footer>
 
     <script src="index.js"></script>

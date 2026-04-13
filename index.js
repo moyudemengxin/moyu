@@ -7,24 +7,24 @@ const DAO_LIST = [
 ];
 
 const DAO_DESCRIPTIONS = {
-    "神道": { quote:"执棋掌命，代天行章。", desc:"道心如磐，意志如铁。你生来便知秩序的重量，不喜失控，不屑苟且。于纷乱中你看见规则，于混沌中你建立章法。" },
-    "魔道": { quote:"问道由我，不拜四方。", desc:"你不信命，不拜神，只拜自己。规矩是别人定的，路是你自己踩出来的。心头那团火，烧的是不甘，炼的是执念。" },
-    "逍遥道": { quote:"御风千里，天地为乡。", desc:"你不愿被任何事物拴住。来是一阵风，去是一片云。这天地偌大，何处不是归处？你只求一个自在。" },
-    "长生道": { quote:"不争朝夕，只问久长。", desc:"你从不赌一时之快。旁人争春，你等秋实。走得快的不一定走得远，而你想看看这条路的尽头。" },
-    "众生道": { quote:"化入江海，一滴无疆。", desc:"你不做孤峰，愿为川流。把自己揉碎撒进人海，渡人即是渡己。" },
-    "苍生道": { quote:"燃灯照夜，以身渡航。", desc:"你生来便觉得肩上沉甸甸。黑暗里你走在最前，灯火燃尽之前，照一寸是一寸，渡一人是一人。" },
-    "医道": { quote:"悬壶济世，枯木回阳。", desc:"你见不得破碎。总想把这世间的裂痕也一并缝补。敢直面伤痛并试图治愈它，本身就是一种孤勇。" },
-    "杀道": { quote:"霜刃无眼，斩业断肠。", desc:"你的手起刀落，从不犹豫。以杀止杀，是你给这世道最沉默的慈悲。" },
-    "无情道": { quote:"心如止水，不染尘霜。", desc:"你不是没有心，只是把心沉得太深。靠得太近会灼伤，不如隔着一层霜，两两相望。" },
-    "红尘道": { quote:"醉卧烟火，笑饮痴狂。", desc:"你要的从来不是结果，是过程。爱要痛快，恨要尽兴，若不纵情活一回，岂不是白来这一趟。" },
-    "炼器道": { quote:"千锤铸骨，百炼成钢。", desc:"你信笨功夫。火候到了，铁自然成钢；功夫到了，道自然现身。" },
-    "御器道": { quote:"万物在手，皆为锋芒。", desc:"你不执着于拥有，只在意能用。天下无一物不可为你所用，四两拨千斤才是你的道。" },
-    "逆天道": { quote:"踏碎凌霄，我自为王。", desc:"压你的，你要掀翻；拦你的，你要踏碎。你的道不在天上，在自己脚下。" },
-    "顺天道": { quote:"潮起潮落，与道俯仰。", desc:"你不争，信万物自有其时。逆流而上固然勇猛，顺水推舟才是智慧。" },
-    "文道": { quote:"一笔落定，万古流芳。", desc:"你信文字比肉身长久。千年之后，你留下的那几行字，或许还能在某个月夜被念起。" },
-    "武道": { quote:"身镇山河，拳破苍茫。", desc:"想不明白的，先做了再说。这世间的道理，有时候一拳打出去就通了。" },
-    "禅道": { quote:"枯荣不语，明镜照常。", desc:"你不说，不是无话可说；你不动，不是无路可走。心里空了，天地才装得进来。" },
-    "凡人道": { quote:"柴门炊火，亦是道场。", desc:"你从不觉得自己有什么特别。把平凡的日子一天天过好，把身边的那几个人一个个护好，便是最大的本事。" }
+    "神道": { quote:" 执棋掌命，代天行章 ", desc:"道心如磐，意志如铁。你生来便知秩序的重量，不喜失控，不屑苟且。于纷乱中你看见规则，于混沌中你建立章法。" },
+    "魔道": { quote:" 问道由我，不拜四方 ", desc:"你不信命，不拜神，只拜自己。规矩是别人定的，路是你自己踩出来的。心头那团火，烧的是不甘，炼的是执念。" },
+    "逍遥道": { quote:" 御风千里，天地为乡 ", desc:"你不愿被任何事物拴住。来是一阵风，去是一片云。这天地偌大，何处不是归处？你只求一个自在。" },
+    "长生道": { quote:" 不争朝夕，只问久长 ", desc:"你从不赌一时之快。旁人争春，你等秋实。走得快的不一定走得远，而你想看看这条路的尽头。" },
+    "众生道": { quote:" 化入江海，一滴无疆 ", desc:"你不做孤峰，愿为川流。把自己揉碎撒进人海，渡人即是渡己。" },
+    "苍生道": { quote:" 燃灯照夜，以身渡航 ", desc:"你生来便觉得肩上沉甸甸。黑暗里你走在最前，灯火燃尽之前，照一寸是一寸，渡一人是一人。" },
+    "医道": { quote:" 悬壶济世，枯木回阳 ", desc:"你见不得破碎。总想把这世间的裂痕也一并缝补。敢直面伤痛并试图治愈它，本身就是一种孤勇。" },
+    "杀道": { quote:" 霜刃无眼，斩业断肠 ", desc:"你的手起刀落，从不犹豫。以杀止杀，是你给这世道最沉默的慈悲。" },
+    "无情道": { quote:" 心如止水，不染尘霜 ", desc:"你不是没有心，只是把心沉得太深。靠得太近会灼伤，不如隔着一层霜，两两相望。" },
+    "红尘道": { quote:" 醉卧烟火，笑饮痴狂 ", desc:"你要的从来不是结果，是过程。爱要痛快，恨要尽兴，若不纵情活一回，岂不是白来这一趟。" },
+    "炼器道": { quote:" 千锤铸骨，百炼成钢 ", desc:"你信笨功夫。火候到了，铁自然成钢；功夫到了，道自然现身。" },
+    "御器道": { quote:" 万物在手，皆为锋芒 ", desc:"你不执着于拥有，只在意能用。天下无一物不可为你所用，四两拨千斤才是你的道。" },
+    "逆天道": { quote:" 踏碎凌霄，我自为王 ", desc:"压你的，你要掀翻；拦你的，你要踏碎。你的道不在天上，在自己脚下。" },
+    "顺天道": { quote:" 潮起潮落，与道俯仰 ", desc:"你不争，信万物自有其时。逆流而上固然勇猛，顺水推舟才是智慧。" },
+    "文道": { quote:" 一笔落定，万古流芳 ", desc:"你信文字比肉身长久。千年之后，你留下的那几行字，或许还能在某个月夜被念起。" },
+    "武道": { quote:" 身镇山河，拳破苍茫 ", desc:"想不明白的，先做了再说。这世间的道理，有时候一拳打出去就通了。" },
+    "禅道": { quote:" 枯荣不语，明镜照常 ", desc:"你不说，不是无话可说；你不动，不是无路可走。心里空了，天地才装得进来。" },
+    "凡人道": { quote:" 柴门炊火，亦是道场 ", desc:"你从不觉得自己有什么特别。把平凡的日子一天天过好，把身边的那几个人一个个护好，便是最大的本事。" }
 };
 
 // 道途关联性映射（用于多个同分辅修时选择最相关的）
@@ -490,27 +490,72 @@ function renderPage() {
     updateButtons();
 }
 
-function isCurrentPageComplete() {
-    const start = currentPage * QUESTIONS_PER_PAGE;
-    const end = Math.min(start + QUESTIONS_PER_PAGE, questions.length);
-    for (let i = start; i < end; i++) if (userAnswers[i] === null) return false;
-    return true;
-}
 
+// ========================  按钮更新逻辑  ========================
 function updateButtons() {
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const submitBtn = document.getElementById('submit-btn');
+    
     prevBtn.disabled = (currentPage === 0);
+    
+    // 核心修改：无论有没有答完，都允许点击，把检查工作交给点击事件！
     if (currentPage === totalPages - 1) {
         nextBtn.classList.add('hidden');
         submitBtn.classList.remove('hidden');
-        submitBtn.disabled = !userAnswers.every(a => a !== null);
+        submitBtn.disabled = false; // 永远不禁用
     } else {
         nextBtn.classList.remove('hidden');
         submitBtn.classList.add('hidden');
-        nextBtn.disabled = !isCurrentPageComplete();
+        nextBtn.disabled = false; // 永远不禁用
     }
+}
+
+// ========================  新增：统一的漏题高亮动画功能  ========================
+function highlightQuestion(globalIndex) {
+    const targetPage = Math.floor(globalIndex / QUESTIONS_PER_PAGE);
+    // 如果不在同一页，先翻页
+    if (currentPage !== targetPage) {
+        currentPage = targetPage;
+        renderPage();
+    }
+    // 延迟100ms等待DOM渲染，然后滑动并高亮
+    setTimeout(() => {
+        const questionItems = document.querySelectorAll('.question-item');
+        const targetIndexOnPage = globalIndex % QUESTIONS_PER_PAGE;
+        if (questionItems[targetIndexOnPage]) {
+            questionItems[targetIndexOnPage].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            questionItems[targetIndexOnPage].style.transition = 'box-shadow 0.3s';
+            questionItems[targetIndexOnPage].style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
+            setTimeout(() => {
+                questionItems[targetIndexOnPage].style.boxShadow = '';
+            }, 2000);
+        }
+    }, 100);
+}
+
+// ========================  新增：点击“下一页”时的拦截检查  ========================
+function handleNext() {
+    // 检查【当前页】是否有未答题目
+    const start = currentPage * QUESTIONS_PER_PAGE;
+    const end = Math.min(start + QUESTIONS_PER_PAGE, questions.length);
+    let missedIndex = -1;
+    for (let i = start; i < end; i++) {
+        if (userAnswers[i] === null) {
+            missedIndex = i;
+            break;
+        }
+    }
+    
+    // 如果当前页有漏题，拦截并高亮
+    if (missedIndex !== -1) {
+        highlightQuestion(missedIndex);
+        alert(`请先完成本页的第 ${missedIndex + 1} 题`);
+        return; 
+    }
+    
+    // 当前页全答完了，放心放行去下一页
+    goToPage(1);
 }
 
 function goToPage(delta) {
@@ -638,93 +683,206 @@ function drawRadar(scores) {
     points.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, 2*Math.PI); ctx.fillStyle = "#4a2c16"; ctx.fill(); });
 }
 
-// ========================  结果展示（布局严格修正） ========================
+// ========================  结果展示（结合漏题检查与全新排版） ========================
 function displayResult() {
-    // 检查是否所有题目都已答
+    // 1. 全局检查是否有任何漏题
     const firstUnansweredIndex = userAnswers.findIndex(ans => ans === null);
     
     if (firstUnansweredIndex !== -1) {
-        // 计算未答题所在的页码（0-index）
-        const targetPage = Math.floor(firstUnansweredIndex / QUESTIONS_PER_PAGE);
-        
-        // 如果当前页不是目标页，则跳转
-        if (currentPage !== targetPage) {
-            currentPage = targetPage;
-            renderPage();
-        }
-        
-        // 滚动到对应题目并高亮提示
-        setTimeout(() => {
-            const questionItems = document.querySelectorAll('.question-item');
-            const targetIndexOnPage = firstUnansweredIndex % QUESTIONS_PER_PAGE;
-            if (questionItems[targetIndexOnPage]) {
-                questionItems[targetIndexOnPage].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                // 添加临时高亮效果
-                questionItems[targetIndexOnPage].style.transition = 'box-shadow 0.3s';
-                questionItems[targetIndexOnPage].style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
-                setTimeout(() => {
-                    questionItems[targetIndexOnPage].style.boxShadow = '';
-                }, 2000);
-            }
-        }, 100);
-        
-        // 提示用户
+        highlightQuestion(firstUnansweredIndex);
         alert(`请回答第 ${firstUnansweredIndex + 1} 题`);
-        return;
+        return; // 强制打断
     }
     
-    // --- 以下为原有计算结果和展示逻辑（保持不变）---
+    // 2. 所有题目已答，开始计算并渲染结果
     const scores = calculateScores();
     const result = generateResultData(scores);
     const resultDiv = document.getElementById('result-content');
     const area = document.getElementById('result-area');
     area.classList.remove('hidden');
     
+    // 走火入魔特殊处理
     if (result.isChaos) return showChaosMode(resultDiv, scores);
     
+    // 3. 构建结果 HTML 结构
     let html = `<div class="result-text">`;
     html += `<div class="dao-name">${result.title}</div>`;
+    
     if (result.subTitle) {
         html += `<div class="sub-dao">${result.subTitle}</div>`;
     }
+    
     html += `<div class="radar-container"><canvas id="radarChart" width="500" height="500"></canvas></div>`;
     
-    const allDaos = [...result.mainDaos, ...result.subDaos];
-    allDaos.forEach(dao => {
+   
+    // 1. 渲染主修道途
+    result.mainDaos.forEach(dao => {
         const d = DAO_DESCRIPTIONS[dao];
-        html += `<div class="dao-desc-item"><strong>${dao}</strong>：${d.desc} 「${d.quote}」</div>`;
+        // 核心修改：使用了 .is-main 样式包住，并在道名前加上了 [主修] 标签
+        html += `
+        <div class="dao-desc-item is-main">
+            <div class="dao-quote-title">
+                <span class="dao-tag tag-main">主修</span>
+                <strong>${dao}</strong>：「${d.quote}」
+            </div>
+            <div class="dao-desc-text">${d.desc}</div>
+        </div>`;
     });
+
+    // 2. 渲染辅修道途（如果有辅修数据的话）
+    result.subDaos.forEach(dao => {
+        const d = DAO_DESCRIPTIONS[dao];
+        // 核心修改：使用了 .is-sub 样式包住，并在道名前加上了 [辅修] 标签
+        html += `
+        <div class="dao-desc-item is-sub">
+            <div class="dao-quote-title">
+                <span class="dao-tag tag-sub">辅修</span>
+                <strong>${dao}</strong>：「${d.quote}」
+            </div>
+            <div class="dao-desc-text">${d.desc}</div>
+        </div>`;
+    });
+    
     html += `</div>`;
     
+    // 4. 渲染上墙与画图
     resultDiv.innerHTML = html;
     drawRadar(scores);
     area.scrollIntoView({ behavior: 'smooth' });
 }
 
+// ========================  彩蛋/走火入魔模式（全新：羽化飞升与大道解构特效） ========================
 function showChaosMode(container, scores) {
-    container.innerHTML = `<div class="glitch-box" id="glitch-text">???道<br>？？？？</div>`;
-    const el = document.getElementById('glitch-text');
-    const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`αβγδεζηθικλμνξοπρστυφχψω';
-    let cnt = 0;
-    const iv = setInterval(() => {
-        let s = ''; for (let i=0;i<12;i++) s += chars[Math.floor(Math.random()*chars.length)];
-        el.innerHTML = `???道<br>${s}`;
-        if (++cnt >= 14) {
-            clearInterval(iv);
-            el.innerHTML = `<span style="font-size:4rem;font-weight:bold;">超脱</span>`;
-            setTimeout(() => {
-                container.innerHTML = `<div class="result-text"><div class="dao-name">超脱</div><div class="dao-desc-item">万道归虚，不着于相。</div><div class="radar-container"><canvas id="radarChart" width="500" height="500"></canvas></div></div>`;
-                drawRadar(scores);
-            }, 800);
+    const area = document.getElementById('result-area');
+    
+    // 1. 打破桎梏：直接清除常规的结果框背景和阴影，让它融入整个网页
+    area.style.background = 'transparent';
+    area.style.boxShadow = 'none';
+    area.style.border = 'none';
+    area.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // 2. 注入动态飞升场景容器
+    container.innerHTML = `
+        <div id="ascension-scene" style="position: relative; width: 100%; min-height: 65vh; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <div id="glitch-particles" style="position: absolute; inset: 0; pointer-events: none;"></div>
+            <div id="core-text" style="position: relative; z-index: 10; text-align: center; color: #2b1b0e; width: 100%;"></div>
+        </div>
+    `;
+
+    const particleContainer = document.getElementById('glitch-particles');
+    const coreText = document.getElementById('core-text');
+    // 仙侠与赛博混杂的字符库
+    const chars = '道心无相天地玄黄宇宙洪荒!@#$%^&*()_+☯☰☱☲☳☴☵☶☷01';
+
+    let particleCount = 0;
+    
+    // 3. 制造“层次感飞升”的粒子特效
+    const spawnInterval = setInterval(() => {
+        if (particleCount > 50) return; // 生成约50个飞升字符
+        particleCount++;
+
+        const p = document.createElement('div');
+        p.innerText = chars[Math.floor(Math.random() * chars.length)];
+        
+        // 随机层级：前景清晰且快，背景模糊且慢
+        const isForeground = Math.random() > 0.5;
+        const size = isForeground ? (Math.random() * 2 + 1.5) : (Math.random() * 1 + 0.8);
+        const startX = Math.random() * 100; // 横向随机分布
+        const startY = Math.random() * 20 + 80; // 从底部 80%~100% 区域出生
+
+        // 粒子的初始状态
+        p.style.position = 'absolute';
+        p.style.left = `${startX}%`;
+        p.style.top = `${startY}%`;
+        p.style.fontSize = `${size}rem`;
+        p.style.color = isForeground ? '#6b4e2e' : '#d8caba'; // 前景深色，背景浅色
+        p.style.opacity = '0';
+        p.style.filter = isForeground ? 'none' : 'blur(3px)'; // 制造景深层次感
+        p.style.transition = 'all 2s cubic-bezier(0.25, 1, 0.5, 1)'; // 顺滑的上浮动画
+        p.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 90 - 45}deg)`;
+
+        particleContainer.appendChild(p);
+
+        // 延时极短时间后，触发粒子的 CSS 过渡动画（上浮、放大、显现）
+        setTimeout(() => {
+            p.style.opacity = isForeground ? '0.8' : '0.3';
+            p.style.top = `${startY - 40 - Math.random() * 50}%`; // 往上飘 40%~90% 的高度
+            p.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 180 - 90}deg) scale(1.2)`;
+        }, 50);
+
+        // 中心文本的疯狂闪动干扰
+        coreText.innerHTML = `<span style="font-size: clamp(2rem, 8vw, 4rem); letter-spacing: ${Math.random()*20}px; opacity: ${Math.random()}; filter: blur(${Math.random()*3}px)">???</span>`;
+    }, 40); // 每40毫秒吐出一个新粒子
+
+    // 4. 飞升结束，大象无形：呈现终极高级排版
+    setTimeout(() => {
+        clearInterval(spawnInterval);
+        particleContainer.style.opacity = '0'; // 隐去粒子残骸
+        particleContainer.style.transition = 'opacity 1s ease';
+
+        // 如果没有全局动画样式，就临时注入一个淡入效果
+        if(!document.getElementById('chaos-styles')) {
+            const style = document.createElement('style');
+            style.id = 'chaos-styles';
+            style.innerHTML = `
+                @keyframes transcendFade {
+                    0% { opacity: 0; transform: scale(0.95) translateY(10px); filter: blur(8px); }
+                    100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+                }
+            `;
+            document.head.appendChild(style);
         }
-    }, 500);
+
+        // 极其惊艳的海报级排版（包含超大水印）
+        coreText.innerHTML = `
+            <div style="animation: transcendFade 2s ease-out forwards; width: 100%;">
+                <div style="position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(8rem, 35vw, 25rem); color: #6b4e2e; opacity: 0.04; white-space: nowrap; z-index: -1; pointer-events: none; font-weight: bold; letter-spacing: -2vw;">
+                    超脱
+                </div>
+
+                <div style="font-size: clamp(3.5rem, 15vw, 5rem); letter-spacing: clamp(10px, 4vw, 24px); margin-bottom: 20px; font-weight: bold; color: #1e1a16;">
+                    超脱
+                </div>
+                <div style="font-size: clamp(1.1rem, 4.5vw, 1.6rem); letter-spacing: clamp(6px, 2.5vw, 12px); color: #5f4a32; font-weight: 500; margin-bottom: 40px; text-align: center;">
+                    万道归虚 不着于相
+                </div>
+                <div class="radar-container" style="position: relative; z-index: 5; filter: drop-shadow(0 0 30px rgba(107,78,46,0.15));">
+                    <canvas id="radarChart" width="500" height="500"></canvas>
+                </div>
+            </div>
+        `;
+
+        // 5. 动态开启0.5秒一跳的混沌雷达图
+        if(window.chaosRadarInterval) clearInterval(window.chaosRadarInterval);
+        window.chaosRadarInterval = setInterval(() => {
+            const canvas = document.getElementById('radarChart');
+            if(canvas) {
+                const glitchScores = {};
+                DAO_LIST.forEach(dao => {
+                    glitchScores[dao] = Math.random() > 0.5 ? (Math.floor(Math.random() * 15) + 3) : (Math.floor(Math.random() * 5));
+                });
+                drawRadar(glitchScores);
+            } else {
+                clearInterval(window.chaosRadarInterval);
+            }
+        }, 500);
+
+        // 先画出第一帧垫底
+        const initialScores = {};
+        DAO_LIST.forEach(dao => initialScores[dao] = Math.floor(Math.random() * 10) + 5);
+        drawRadar(initialScores);
+
+    }, 2400); // 让飞升粒子飞满 2.4 秒后，展现真相
 }
 
 // ========================  初始化  ========================
 window.onload = () => {
     initQuestions();
     renderPage();
-    document.getElementById('prev-btn').addEventListener('click', ()=>goToPage(-1));
-    document.getElementById('next-btn').addEventListener('click', ()=>goToPage(1));
+    document.getElementById('prev-btn').addEventListener('click', () => goToPage(-1));
+    
+    // 这里原来是 ()=>goToPage(1)，现在换成我们带有漏题检查的 handleNext
+    document.getElementById('next-btn').addEventListener('click', handleNext); 
+    
     document.getElementById('submit-btn').addEventListener('click', displayResult);
 };
