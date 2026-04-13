@@ -1,4 +1,5 @@
 // ========================  道途定义  ========================
+// ========================  道途定义  ========================
 const DAO_LIST = [
     "神道", "魔道", "逍遥道", "长生道", "众生道", "苍生道",
     "医道", "杀道", "无情道", "红尘道", "炼器道", "御器道",
@@ -24,6 +25,19 @@ const DAO_DESCRIPTIONS = {
     "武道": { quote:"身镇山河，拳破苍茫。", desc:"想不明白的，先做了再说。这世间的道理，有时候一拳打出去就通了。" },
     "禅道": { quote:"枯荣不语，明镜照常。", desc:"你不说，不是无话可说；你不动，不是无路可走。心里空了，天地才装得进来。" },
     "凡人道": { quote:"柴门炊火，亦是道场。", desc:"你从不觉得自己有什么特别。把平凡的日子一天天过好，把身边的那几个人一个个护好，便是最大的本事。" }
+};
+
+// 道途关联性映射（用于多个同分辅修时选择最相关的）
+const DAO_AFFINITY = {
+    "神道": ["魔道","顺天道","炼器道"], "魔道": ["神道","逆天道","御器道"],
+    "逍遥道": ["长生道","禅道","红尘道"], "长生道": ["逍遥道","医道","凡人道"],
+    "众生道": ["苍生道","顺天道","凡人道"], "苍生道": ["众生道","医道","文道"],
+    "医道": ["杀道","苍生道","长生道"], "杀道": ["医道","魔道","武道"],
+    "无情道": ["红尘道","神道","禅道"], "红尘道": ["无情道","逍遥道","凡人道"],
+    "炼器道": ["御器道","神道","文道"], "御器道": ["炼器道","魔道","顺天道"],
+    "逆天道": ["顺天道","武道","魔道"], "顺天道": ["逆天道","神道","长生道"],
+    "文道": ["武道","苍生道","炼器道"], "武道": ["文道","逆天道","杀道"],
+    "禅道": ["凡人道","逍遥道","无情道"], "凡人道": ["禅道","红尘道","众生道"]
 };
 
 // ========================  题目数据（56题） ========================
@@ -434,29 +448,80 @@ function buildQuestions() {
     ];
 }
 
-// ========================  全局变量与渲染  ========================
-let userAnswers = new Array(56).fill(null);
-const questions = buildQuestions();
+// ========================  分页与全局变量  ========================
+const QUESTIONS_PER_PAGE = 8;
+let currentPage = 0;
+let totalPages = 0;
+let userAnswers = [];
+let questions = [];
 
-function renderQuestions() {
-    const container = document.getElementById('questions-container');
+function initQuestions() {
+    questions = buildQuestions();
+    totalPages = Math.ceil(questions.length / QUESTIONS_PER_PAGE);
+    userAnswers = new Array(questions.length).fill(null);
+}
+
+// ========================  页面渲染  ========================
+function renderPage() {
+    const container = document.getElementById('pages-container');
+    const start = currentPage * QUESTIONS_PER_PAGE;
+    const end = Math.min(start + QUESTIONS_PER_PAGE, questions.length);
     let html = '';
-    questions.forEach((q, idx) => {
-        html += `<div class="question-item"><div class="q-title">${idx+1}. ${q.text}</div>`;
+    for (let i = start; i < end; i++) {
+        const q = questions[i];
+        html += `<div class="question-item"><div class="q-title">${i+1}. ${q.text}</div>`;
         q.options.forEach((opt, optIdx) => {
-            html += `<label class="option-label"><input type="radio" name="q${idx}" value="${optIdx}"> ${opt.text}</label>`;
+            const checked = userAnswers[i] === optIdx ? 'checked' : '';
+            html += `<label class="option-label"><input type="radio" name="q${i}" value="${optIdx}" ${checked}> ${opt.text}</label>`;
         });
         html += `</div>`;
-    });
+    }
     container.innerHTML = html;
-    for (let i = 0; i < questions.length; i++) {
+
+    for (let i = start; i < end; i++) {
         const radios = document.getElementsByName(`q${i}`);
         radios.forEach(r => r.addEventListener('change', (e) => {
             userAnswers[i] = parseInt(e.target.value);
+            updateButtons();
         }));
     }
+
+    document.getElementById('page-indicator').textContent = `第 ${currentPage+1} / ${totalPages} 页`;
+    updateButtons();
 }
-// ========================  计分与结果逻辑  ========================
+
+function isCurrentPageComplete() {
+    const start = currentPage * QUESTIONS_PER_PAGE;
+    const end = Math.min(start + QUESTIONS_PER_PAGE, questions.length);
+    for (let i = start; i < end; i++) if (userAnswers[i] === null) return false;
+    return true;
+}
+
+function updateButtons() {
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    prevBtn.disabled = (currentPage === 0);
+    if (currentPage === totalPages - 1) {
+        nextBtn.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+        submitBtn.disabled = !userAnswers.every(a => a !== null);
+    } else {
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+        nextBtn.disabled = !isCurrentPageComplete();
+    }
+}
+
+function goToPage(delta) {
+    const newPage = currentPage + delta;
+    if (newPage < 0 || newPage >= totalPages) return;
+    currentPage = newPage;
+    renderPage();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ========================  计分与结果生成  ========================
 function calculateScores() {
     const scores = {};
     DAO_LIST.forEach(d => scores[d] = 0);
@@ -464,160 +529,169 @@ function calculateScores() {
         const ans = userAnswers[i];
         if (ans !== null) {
             const selected = questions[i].options[ans];
-            for (let dao in selected.scores) {
-                scores[dao] += selected.scores[dao];
-            }
+            for (let dao in selected.scores) scores[dao] += selected.scores[dao];
         }
     }
     return scores;
 }
 
-function getResultType(scores) {
+function selectBestSubDao(mainDaos, candidates, scores) {
+    if (candidates.length <= 1) return candidates;
+    const affinitySet = new Set();
+    mainDaos.forEach(m => (DAO_AFFINITY[m] || []).forEach(a => affinitySet.add(a)));
+    return candidates.sort((a, b) => {
+        const aAff = affinitySet.has(a) ? 1 : 0;
+        const bAff = affinitySet.has(b) ? 1 : 0;
+        if (aAff !== bAff) return bAff - aAff;
+        return scores[b] - scores[a];
+    });
+}
+
+function generateResultData(scores) {
     const maxScore = Math.max(...Object.values(scores));
     const topDaos = DAO_LIST.filter(d => scores[d] === maxScore);
-    return { topDaos, maxScore, scores };
-}
-
-// 乱码闪烁 → 超脱
-function showChaosMode(container, scores) {
-    container.innerHTML = `<div class="glitch-box" id="glitch-text">???道<br>？？？？</div>`;
-    const glitchEl = document.getElementById('glitch-text');
-    const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`αβγδεζηθικλμνξοπρστυφχψω';
-    let count = 0;
-    const interval = setInterval(() => {
-        let str = '';
-        for (let i = 0; i < 12; i++) str += chars[Math.floor(Math.random() * chars.length)];
-        glitchEl.innerHTML = `???道<br>${str}`;
-        count++;
-        if (count >= 14) { // 约7秒
-            clearInterval(interval);
-            glitchEl.innerHTML = `<span style="font-size:4rem; font-weight:bold;">超脱</span>`;
-            setTimeout(() => {
-                const newHtml = `<div class="result-text"><div class="dao-name">超脱</div><div class="dao-desc">万道归虚，不着于相。</div></div><div class="radar-container"><canvas id="radarChart" width="500" height="500"></canvas></div>`;
-                container.innerHTML = newHtml;
-                drawRadar(scores);
-            }, 800);
+    
+    if (topDaos.length >= 4) return { isChaos: true, scores };
+    
+    let mainDaos = [...topDaos];
+    let subDaos = [];
+    let title = '', subTitle = '';
+    
+    if (mainDaos.length === 1) {
+        title = mainDaos[0];
+        const candidates = DAO_LIST.filter(d => d !== mainDaos[0])
+                           .sort((a,b) => scores[b] - scores[a]);
+        subDaos = candidates.slice(0, 2);
+        subTitle = subDaos.join(' · ');
+    } else if (mainDaos.length === 2) {
+        title = '双道同修';
+        subTitle = mainDaos.join(' · ');
+        const candidates = DAO_LIST.filter(d => !mainDaos.includes(d));
+        if (candidates.length) {
+            const maxSub = Math.max(...candidates.map(d => scores[d]));
+            let best = candidates.filter(d => scores[d] === maxSub);
+            best = selectBestSubDao(mainDaos, best, scores);
+            if (best.length) {
+                subDaos = [best[0]];
+                subTitle += ' · ' + best[0];
+            }
         }
-    }, 500);
+    } else if (mainDaos.length === 3) {
+        title = '三道同修';
+        subTitle = mainDaos.join(' · ');
+    }
+    
+    return { isChaos: false, title, subTitle, mainDaos, subDaos, scores };
 }
 
-// 绘制雷达图 (18维度)
+// ========================  雷达图绘制（完整） ========================
 function drawRadar(scores) {
     const canvas = document.getElementById('radarChart');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const w = 500, h = 500;
     canvas.width = w; canvas.height = h;
-    
-    const centerX = w/2, centerY = h/2;
-    const radius = 180;
-    const count = DAO_LIST.length;
-    const angleStep = (Math.PI * 2) / count;
+    const centerX = w/2, centerY = h/2, radius = 180;
+    const count = DAO_LIST.length, angleStep = (Math.PI*2)/count;
     const maxScore = Math.max(...Object.values(scores), 1);
     
-    ctx.clearRect(0, 0, w, h);
-    ctx.strokeStyle = "#a28b72";
-    ctx.lineWidth = 0.6;
-    for (let level = 1; level <= 5; level++) {
+    ctx.clearRect(0,0,w,h);
+    
+    // 网格
+    for (let lvl=1; lvl<=5; lvl++) {
         ctx.beginPath();
-        const r = (radius * level) / 5;
-        for (let i = 0; i < count; i++) {
-            const angle = i * angleStep - Math.PI/2;
-            const x = centerX + r * Math.cos(angle);
-            const y = centerY + r * Math.sin(angle);
-            if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        const r = (radius*lvl)/5;
+        for (let i=0; i<count; i++) {
+            const ang = i*angleStep - Math.PI/2;
+            const x = centerX + r*Math.cos(ang), y = centerY + r*Math.sin(ang);
+            i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
         }
         ctx.closePath();
-        ctx.strokeStyle = "#c4b4a2";
-        ctx.stroke();
+        ctx.strokeStyle = "#c4b4a2"; ctx.lineWidth = 0.6; ctx.stroke();
     }
     
-    for (let i = 0; i < count; i++) {
-        const angle = i * angleStep - Math.PI/2;
-        const x = centerX + radius * Math.cos(angle);
-        const y = centerY + radius * Math.sin(angle);
-        ctx.beginPath();
-        ctx.moveTo(centerX, centerY);
-        ctx.lineTo(x, y);
-        ctx.strokeStyle = "#b8a690";
-        ctx.stroke();
-        const labelX = centerX + (radius + 18) * Math.cos(angle);
-        const labelY = centerY + (radius + 18) * Math.sin(angle);
-        ctx.font = "12px 'Microsoft YaHei'";
-        ctx.fillStyle = "#3e2e1f";
-        ctx.textAlign = "center"; ctx.textBaseline = "middle";
-        ctx.fillText(DAO_LIST[i], labelX, labelY);
+    // 轴与标签
+    ctx.font = "12px 'Microsoft YaHei'"; ctx.fillStyle = "#3e2e1f";
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (let i=0; i<count; i++) {
+        const ang = i*angleStep - Math.PI/2;
+        const x = centerX + radius*Math.cos(ang), y = centerY + radius*Math.sin(ang);
+        ctx.beginPath(); ctx.moveTo(centerX, centerY); ctx.lineTo(x, y);
+        ctx.strokeStyle = "#b8a690"; ctx.lineWidth = 0.8; ctx.stroke();
+        const lx = centerX + (radius+18)*Math.cos(ang), ly = centerY + (radius+18)*Math.sin(ang);
+        ctx.fillText(DAO_LIST[i], lx, ly);
     }
     
+    // 数据多边形
     const points = [];
-    for (let i = 0; i < count; i++) {
+    for (let i=0; i<count; i++) {
         const val = scores[DAO_LIST[i]] || 0;
         const r = (val / maxScore) * radius;
-        const angle = i * angleStep - Math.PI/2;
-        points.push({ x: centerX + r * Math.cos(angle), y: centerY + r * Math.sin(angle) });
+        const ang = i*angleStep - Math.PI/2;
+        points.push({ x: centerX + r*Math.cos(ang), y: centerY + r*Math.sin(ang) });
     }
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+    ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
+    for (let i=1; i<points.length; i++) ctx.lineTo(points[i].x, points[i].y);
     ctx.closePath();
-    ctx.fillStyle = "rgba(107, 78, 46, 0.3)";
-    ctx.fill();
-    ctx.strokeStyle = "#5f3f24";
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
-    
-    points.forEach(p => {
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = "#4a2c16";
-        ctx.fill();
-    });
+    ctx.fillStyle = "rgba(107,78,46,0.3)"; ctx.fill();
+    ctx.strokeStyle = "#5f3f24"; ctx.lineWidth = 2.5; ctx.stroke();
+    points.forEach(p => { ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, 2*Math.PI); ctx.fillStyle = "#4a2c16"; ctx.fill(); });
 }
 
+// ========================  结果展示（布局严格修正） ========================
 function displayResult() {
-    for (let i = 0; i < userAnswers.length; i++) if (userAnswers[i] === null) {
-        alert(`请回答第 ${i+1} 题`); return;
-    }
     const scores = calculateScores();
-    const { topDaos } = getResultType(scores);
+    const result = generateResultData(scores);
     const resultDiv = document.getElementById('result-content');
     const area = document.getElementById('result-area');
-    area.style.display = 'block';
-
-    if (topDaos.length >= 4) {
-        showChaosMode(resultDiv, scores);
-        return;
-    }
-
-    let mainDao = topDaos[0];
-    let subDaos = [];
-    if (topDaos.length === 2) { mainDao = topDaos[0]; subDaos = [topDaos[1]]; }
-    else if (topDaos.length === 3) { mainDao = topDaos[0]; subDaos = [topDaos[1], topDaos[2]]; }
-    else {
-        const threshold = 20;
-        subDaos = DAO_LIST.filter(d => d !== mainDao && scores[d] >= threshold);
-        if (subDaos.length > 2) subDaos = subDaos.slice(0, 2);
-    }
-
-    const mainDesc = DAO_DESCRIPTIONS[mainDao];
-    let subText = '';
-    if (subDaos.length === 1) subText = `辅修 · ${subDaos[0]}`;
-    else if (subDaos.length === 2) subText = `兼修 · ${subDaos[0]}、${subDaos[1]}`;
+    area.classList.remove('hidden');
     
+    if (result.isChaos) return showChaosMode(resultDiv, scores);
+    
+    // 构建清晰的结构：大字标题 → 辅修小字 → 雷达图 → 介绍（先主后辅）
     let html = `<div class="result-text">`;
-    html += `<div class="dao-name">${mainDao}</div>`;
-    if (subText) html += `<div style="font-size:1rem; color:#7a624b;">${subText}</div>`;
-    html += `<div class="dao-desc">${mainDesc.desc}</div>`;
-    html += `<div class="dao-quote">「${mainDesc.quote}」</div>`;
-    html += `</div>`;
+    html += `<div class="dao-name">${result.title}</div>`;
+    if (result.subTitle) {
+        html += `<div class="sub-dao">${result.subTitle}</div>`;
+    }
     html += `<div class="radar-container"><canvas id="radarChart" width="500" height="500"></canvas></div>`;
+    
+    const allDaos = [...result.mainDaos, ...result.subDaos];
+    allDaos.forEach(dao => {
+        const d = DAO_DESCRIPTIONS[dao];
+        html += `<div class="dao-desc-item"><strong>${dao}</strong>：${d.desc} 「${d.quote}」</div>`;
+    });
+    html += `</div>`;
+    
     resultDiv.innerHTML = html;
     drawRadar(scores);
     area.scrollIntoView({ behavior: 'smooth' });
 }
 
+function showChaosMode(container, scores) {
+    container.innerHTML = `<div class="glitch-box" id="glitch-text">???道<br>？？？？</div>`;
+    const el = document.getElementById('glitch-text');
+    const chars = '!@#$%^&*()_+-=[]{}|;:,.<>?/~`αβγδεζηθικλμνξοπρστυφχψω';
+    let cnt = 0;
+    const iv = setInterval(() => {
+        let s = ''; for (let i=0;i<12;i++) s += chars[Math.floor(Math.random()*chars.length)];
+        el.innerHTML = `???道<br>${s}`;
+        if (++cnt >= 14) {
+            clearInterval(iv);
+            el.innerHTML = `<span style="font-size:4rem;font-weight:bold;">超脱</span>`;
+            setTimeout(() => {
+                container.innerHTML = `<div class="result-text"><div class="dao-name">超脱</div><div class="dao-desc-item">万道归虚，不着于相。</div><div class="radar-container"><canvas id="radarChart" width="500" height="500"></canvas></div></div>`;
+                drawRadar(scores);
+            }, 800);
+        }
+    }, 500);
+}
+
 // ========================  初始化  ========================
 window.onload = () => {
-    renderQuestions();
+    initQuestions();
+    renderPage();
+    document.getElementById('prev-btn').addEventListener('click', ()=>goToPage(-1));
+    document.getElementById('next-btn').addEventListener('click', ()=>goToPage(1));
     document.getElementById('submit-btn').addEventListener('click', displayResult);
 };
