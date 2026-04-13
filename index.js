@@ -659,7 +659,12 @@ function displayResult() {
     const allDaos = [...result.mainDaos, ...result.subDaos];
     allDaos.forEach(dao => {
         const d = DAO_DESCRIPTIONS[dao];
-        html += `<div class="dao-desc-item"><strong>${dao}</strong>：${d.desc} 「${d.quote}」</div>`;
+        // 将八字真言提上去，解释文本放在专门的 div 里
+        html += `
+        <div class="dao-desc-item">
+            <div class="dao-quote-title"><strong>${dao}</strong>：「${d.quote}」</div>
+            <div class="dao-desc-text">${d.desc}</div>
+        </div>`;
     });
     html += `</div>`;
     

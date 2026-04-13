@@ -139,19 +139,36 @@
             border-radius: 30px;
             padding: 8px;
         }
+        /* 保持原有的外层容器样式不变 */
         .dao-desc-item {
             text-align: left;
             margin: 15px 0;
-            padding: 12px 18px;
+            padding: 14px 20px;
             background: #f3ede6;
             border-radius: 20px;
-            font-size: 1rem;
             line-height: 1.6;
         }
-        .dao-desc-item strong {
-            color: #4f3a22;
-            font-size: 1.1rem;
-            margin-right: 8px;
+
+        /* 新增：八字真言行的样式 */
+        .dao-quote-title {
+            font-size: 1.05rem; /* 稍微大一点，突出重点 */
+            color: #3e2e1f;
+            margin-bottom: 6px; /* 换行并向下留出间距 */
+            font-weight: 500;
+        }
+
+        /* 强化道名加粗效果 */
+        .dao-quote-title strong {
+            color: #6b4e2e;
+            font-size: 1.15rem;
+            margin-right: 4px;
+        }
+
+        /* 新增：小字解释文本的样式 */
+        .dao-desc-text {
+            font-size: 0.9rem; /* 设置为小字 */
+            color: #7a624b; /* 颜色调浅一点，拉开层次感 */
+            text-align: justify; /* 两端对齐，看起来更整齐 */
         }
         .glitch-box {
             font-family: monospace;
