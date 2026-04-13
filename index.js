@@ -640,6 +640,40 @@ function drawRadar(scores) {
 
 // ========================  结果展示（布局严格修正） ========================
 function displayResult() {
+    // 检查是否所有题目都已答
+    const firstUnansweredIndex = userAnswers.findIndex(ans => ans === null);
+    
+    if (firstUnansweredIndex !== -1) {
+        // 计算未答题所在的页码（0-index）
+        const targetPage = Math.floor(firstUnansweredIndex / QUESTIONS_PER_PAGE);
+        
+        // 如果当前页不是目标页，则跳转
+        if (currentPage !== targetPage) {
+            currentPage = targetPage;
+            renderPage();
+        }
+        
+        // 滚动到对应题目并高亮提示
+        setTimeout(() => {
+            const questionItems = document.querySelectorAll('.question-item');
+            const targetIndexOnPage = firstUnansweredIndex % QUESTIONS_PER_PAGE;
+            if (questionItems[targetIndexOnPage]) {
+                questionItems[targetIndexOnPage].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                // 添加临时高亮效果
+                questionItems[targetIndexOnPage].style.transition = 'box-shadow 0.3s';
+                questionItems[targetIndexOnPage].style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
+                setTimeout(() => {
+                    questionItems[targetIndexOnPage].style.boxShadow = '';
+                }, 2000);
+            }
+        }, 100);
+        
+        // 提示用户
+        alert(`请回答第 ${firstUnansweredIndex + 1} 题`);
+        return;
+    }
+    
+    // --- 以下为原有计算结果和展示逻辑（保持不变）---
     const scores = calculateScores();
     const result = generateResultData(scores);
     const resultDiv = document.getElementById('result-content');
@@ -648,7 +682,6 @@ function displayResult() {
     
     if (result.isChaos) return showChaosMode(resultDiv, scores);
     
-    // 构建清晰的结构：大字标题 → 辅修小字 → 雷达图 → 介绍（先主后辅）
     let html = `<div class="result-text">`;
     html += `<div class="dao-name">${result.title}</div>`;
     if (result.subTitle) {
@@ -659,12 +692,7 @@ function displayResult() {
     const allDaos = [...result.mainDaos, ...result.subDaos];
     allDaos.forEach(dao => {
         const d = DAO_DESCRIPTIONS[dao];
-        // 将八字真言提上去，解释文本放在专门的 div 里
-        html += `
-        <div class="dao-desc-item">
-            <div class="dao-quote-title"><strong>${dao}</strong>：「${d.quote}」</div>
-            <div class="dao-desc-text">${d.desc}</div>
-        </div>`;
+        html += `<div class="dao-desc-item"><strong>${dao}</strong>：${d.desc} 「${d.quote}」</div>`;
     });
     html += `</div>`;
     
