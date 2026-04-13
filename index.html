@@ -2,51 +2,167 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>简单 MBTI 测试</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>道途 · 问心</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            max-width: 900px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f9f9f9;
+            background: #f5efe6;
+            color: #2e241b;
+        }
+        h1 {
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: 6px;
+            border-bottom: 1px solid #b9a28c;
+            padding-bottom: 15px;
+        }
+        .sub {
+            text-align: center;
+            font-style: italic;
+            color: #6b5843;
+            margin-bottom: 30px;
         }
         .question-item {
+            background: #fffbf5;
+            border-radius: 20px;
+            padding: 18px 20px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            border: 1px solid #e7dbcd;
         }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
+        .q-title {
+            font-weight: 600;
+            margin-bottom: 14px;
+            font-size: 1.05rem;
+        }
+        .option-label {
+            display: block;
+            padding: 8px 12px;
+            margin: 6px 0;
+            border-radius: 40px;
+            background: #fcf9f5;
+            border: 1px solid #ddd0c0;
             cursor: pointer;
+            transition: all 0.1s;
         }
-        button:hover {
-            background-color: #45a049;
+        .option-label:hover {
+            background: #efe3d6;
         }
-        #result {
+        .option-label input {
+            margin-right: 10px;
+            accent-color: #8b6f50;
+        }
+        hr {
+            border: none;
+            border-top: 1px dashed #d6c8b8;
+            margin: 20px 0 0;
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .primary-btn {
+            background: #6b4e2e;
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1.2rem;
+            border-radius: 60px;
+            letter-spacing: 2px;
+            cursor: pointer;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            transition: 0.2s;
+            border: 1px solid #8b6f50;
+        }
+        .primary-btn:hover {
+            background: #4f3a22;
+            transform: scale(0.98);
+        }
+        .result-area {
+            background: #e7dbcd;
+            border-radius: 32px;
+            padding: 25px 20px;
             margin-top: 30px;
+            box-shadow: inset 0 0 0 1px #f3ede6, 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .result-text {
+            text-align: center;
+        }
+        .dao-name {
+            font-size: 2.8rem;
+            font-weight: 500;
+            letter-spacing: 8px;
+            color: #2b1b0e;
+        }
+        .dao-desc {
+            font-size: 1.1rem;
+            margin: 15px 0 5px;
+            color: #4d3824;
+        }
+        .dao-quote {
+            font-style: italic;
+            margin-top: 5px;
+            color: #5f4a32;
+        }
+        .radar-container {
+            margin: 20px auto 10px;
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            background: #f1e8de;
+            border-radius: 30px;
+            padding: 8px;
+        }
+        .warning-message {
+            color: #a12f2f;
+            font-weight: 500;
+        }
+        .glitch-box {
+            font-family: monospace;
+            background: #1e1a16;
+            color: #b3ffaa;
             padding: 20px;
-            background-color: #e9ecef;
-            border-radius: 8px;
+            border-radius: 24px;
+            text-align: center;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #8f7a64;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
-    <h1>🧠 探索你的 MBTI 类型</h1>
-    <p>请根据实际情况选择最符合的一项（每道题必选）</p>
+    <h1>· 道 途 问 心 ·</h1>
+    <div class="sub">五十六问 · 照见本真</div>
 
-    <!-- 题目会动态渲染到这里 -->
     <div id="questions-container"></div>
 
-    <button id="submit-btn">查看我的结果</button>
+    <div class="btn-container">
+        <button class="primary-btn" id="submit-btn">叩 问 道 心</button>
+    </div>
 
-    <div id="result"></div>
+    <div id="result-area" class="result-area" style="display: none;">
+        <div id="result-content"></div>
+    </div>
 
-    <!-- 引入 JS 文件 -->
+
     <script src="index.js"></script>
 </body>
 </html>
