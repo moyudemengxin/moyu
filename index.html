@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简单 MBTI 测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        .question-item {
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e9ecef;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧠 探索你的 MBTI 类型</h1>
+    <p>请根据实际情况选择最符合的一项（每道题必选）</p>
+
+    <!-- 题目会动态渲染到这里 -->
+    <div id="questions-container"></div>
+
+    <button id="submit-btn">查看我的结果</button>
+
+    <div id="result"></div>
+
+    <!-- 引入 JS 文件 -->
+    <script src="index.js"></script>
+</body>
+</html>
