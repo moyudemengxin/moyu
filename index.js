@@ -512,26 +512,39 @@ function updateButtons() {
 }
 
 // ========================  新增：统一的漏题高亮动画功能  ========================
+// ========================  新增：统一的漏题高亮动画功能（移动端修复版） ========================
 function highlightQuestion(globalIndex) {
     const targetPage = Math.floor(globalIndex / QUESTIONS_PER_PAGE);
-    // 如果不在同一页，先翻页
+    
+    // 1. 如果不在同一页，先翻页
     if (currentPage !== targetPage) {
         currentPage = targetPage;
         renderPage();
     }
-    // 延迟100ms等待DOM渲染，然后滑动并高亮
+    
+    // 2. 缓冲 150ms：给手机浏览器足够的时间把新题目渲染出来，算准高度
     setTimeout(() => {
         const questionItems = document.querySelectorAll('.question-item');
         const targetIndexOnPage = globalIndex % QUESTIONS_PER_PAGE;
-        if (questionItems[targetIndexOnPage]) {
-            questionItems[targetIndexOnPage].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            questionItems[targetIndexOnPage].style.transition = 'box-shadow 0.3s';
-            questionItems[targetIndexOnPage].style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
+        const targetElement = questionItems[targetIndexOnPage];
+        
+        if (targetElement) {
+            // 3. 开始平滑滑动
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // 4. 添加高亮红框
+            targetElement.style.transition = 'box-shadow 0.3s';
+            targetElement.style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
             setTimeout(() => {
-                questionItems[targetIndexOnPage].style.boxShadow = '';
+                targetElement.style.boxShadow = '';
             }, 2000);
+            
+            // 5. 核心修复：等滑动动画差不多结束了（约400ms后），再弹窗！防止阻断动画！
+            setTimeout(() => {
+                alert(`请先完成第 ${globalIndex + 1} 题`);
+            }, 400); 
         }
-    }, 100);
+    }, 150);
 }
 
 // ========================  新增：点击“下一页”时的拦截检查  ========================
@@ -550,7 +563,6 @@ function handleNext() {
     // 如果当前页有漏题，拦截并高亮
     if (missedIndex !== -1) {
         highlightQuestion(missedIndex);
-        alert(`请先完成本页的第 ${missedIndex + 1} 题`);
         return; 
     }
     
@@ -561,9 +573,14 @@ function handleNext() {
 function goToPage(delta) {
     const newPage = currentPage + delta;
     if (newPage < 0 || newPage >= totalPages) return;
+    
     currentPage = newPage;
-    renderPage();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    renderPage(); // 渲染新页面
+    
+    // 核心修复：给手机 50ms 缓冲时间重绘 DOM，然后再滑到顶部
+    setTimeout(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 50);
 }
 
 // ========================  计分与结果生成  ========================
@@ -690,7 +707,6 @@ function displayResult() {
     
     if (firstUnansweredIndex !== -1) {
         highlightQuestion(firstUnansweredIndex);
-        alert(`请回答第 ${firstUnansweredIndex + 1} 题`);
         return; // 强制打断
     }
     
