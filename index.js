@@ -556,7 +556,7 @@ function updateButtons() {
     }
 }
 
-// ========================  统一的漏题高亮动画功能（QQ/微信内置浏览器防打断版） ========================
+// ========================  统一的漏题高亮动画功能（防打断终极保险版） ========================
 function highlightQuestion(globalIndex) {
     const targetPage = Math.floor(globalIndex / QUESTIONS_PER_PAGE);
     
@@ -566,35 +566,31 @@ function highlightQuestion(globalIndex) {
         renderPage();
     }
     
-    // 2. 缓冲 150ms：给手机浏览器足够的时间把新题目渲染出来
+    // 2. 缓冲 150ms：给手机浏览器足够的时间把新页面渲染出来
     setTimeout(() => {
         const questionItems = document.querySelectorAll('.question-item');
         const targetIndexOnPage = globalIndex % QUESTIONS_PER_PAGE;
         const targetElement = questionItems[targetIndexOnPage];
         
         if (targetElement) {
-            // 3. 纯净滑动：先仅仅触发滑动，绝对不去碰 DOM
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // 3. 【核心防打断】：先操作 DOM！把提示框和红框先弄出来！
+            showToast(`请先完成第 ${globalIndex + 1} 题`);
             
-            // 4. 核心修复：死等 500 毫秒！
-            // 必须等 QQ/微信浏览器的滑动动画彻底结束后，再加入提示框和红框，否则滑动会被强制截断。
+            targetElement.style.transition = 'box-shadow 0.3s';
+            targetElement.style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
+            
+            // 4. 等待 UI 渲染完毕（100毫秒）后，再开始没有任何干扰的平滑滚动
             setTimeout(() => {
-                // 加上红框
-                targetElement.style.transition = 'box-shadow 0.3s';
-                targetElement.style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
-                
-                // 弹出轻提示
-                showToast(`请先完成第 ${globalIndex + 1} 题`);
-                
-                // 2秒后撤销红框
-                setTimeout(() => {
-                    targetElement.style.boxShadow = '';
-                }, 2000);
-            }, 500); // 👈 这个 500ms 就是防止 QQ 浏览器卡住的救命稻草
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100); 
+            
+            // 2秒后撤销红框
+            setTimeout(() => {
+                targetElement.style.boxShadow = '';
+            }, 2000);
         }
     }, 150);
 }
-
 // ========================  新增：点击“下一页”时的拦截检查  ========================
 function handleNext() {
     // 检查【当前页】是否有未答题目
