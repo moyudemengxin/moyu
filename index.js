@@ -455,6 +455,51 @@ let totalPages = 0;
 let userAnswers = [];
 let questions = [];
 
+// ======================== 自定义禅意轻提示 (绝不阻塞动画) ========================
+function showToast(text) {
+    // 如果屏幕上已经有一个提示了，先把它删掉，防止重叠
+    const oldToast = document.getElementById('zen-toast');
+    if (oldToast) oldToast.remove();
+
+    // 创建一个好看的提示框
+    const toast = document.createElement('div');
+    toast.id = 'zen-toast';
+    toast.innerText = text;
+    
+    // 直接用 JS 写入样式，不用你去改 CSS 文件了
+    toast.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(43, 27, 14, 0.85); /* 半透明的深色背景，禅意十足 */
+        color: #f5efe6; /* 你的主题米白色文字 */
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
+        letter-spacing: 2px;
+        z-index: 9999;
+        pointer-events: none; /* 穿透点击，不影响用户操作 */
+        opacity: 0; /* 初始透明 */
+        transition: opacity 0.3s ease-in-out;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    `;
+    
+    document.body.appendChild(toast);
+
+    // 稍微延迟一下触发淡入动画
+    setTimeout(() => {
+        toast.style.opacity = '1';
+    }, 10);
+
+    // 2秒后自动淡出并销毁
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 2000);
+}
+
 function initQuestions() {
     questions = buildQuestions();
     totalPages = Math.ceil(questions.length / QUESTIONS_PER_PAGE);
@@ -539,10 +584,8 @@ function highlightQuestion(globalIndex) {
                 targetElement.style.boxShadow = '';
             }, 2000);
             
-            // 5. 核心修复：等滑动动画差不多结束了（约400ms后），再弹窗！防止阻断动画！
-            setTimeout(() => {
-                alert(`请先完成第 ${globalIndex + 1} 题`);
-            }, 400); 
+            // 5. 终极修复：使用非阻塞轻提示，不再需要强行等待，直接和滑动动画一起触发！
+            showToast(`请先完成第 ${globalIndex + 1} 题`);
         }
     }, 150);
 }
