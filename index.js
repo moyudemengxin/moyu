@@ -556,8 +556,7 @@ function updateButtons() {
     }
 }
 
-// ========================  新增：统一的漏题高亮动画功能  ========================
-// ========================  新增：统一的漏题高亮动画功能（移动端修复版） ========================
+// ========================  统一的漏题高亮动画功能（QQ/微信内置浏览器防打断版） ========================
 function highlightQuestion(globalIndex) {
     const targetPage = Math.floor(globalIndex / QUESTIONS_PER_PAGE);
     
@@ -567,25 +566,31 @@ function highlightQuestion(globalIndex) {
         renderPage();
     }
     
-    // 2. 缓冲 150ms：给手机浏览器足够的时间把新题目渲染出来，算准高度
+    // 2. 缓冲 150ms：给手机浏览器足够的时间把新题目渲染出来
     setTimeout(() => {
         const questionItems = document.querySelectorAll('.question-item');
         const targetIndexOnPage = globalIndex % QUESTIONS_PER_PAGE;
         const targetElement = questionItems[targetIndexOnPage];
         
         if (targetElement) {
-            // 3. 开始平滑滑动
+            // 3. 纯净滑动：先仅仅触发滑动，绝对不去碰 DOM
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
             
-            // 4. 添加高亮红框
-            targetElement.style.transition = 'box-shadow 0.3s';
-            targetElement.style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
+            // 4. 核心修复：死等 500 毫秒！
+            // 必须等 QQ/微信浏览器的滑动动画彻底结束后，再加入提示框和红框，否则滑动会被强制截断。
             setTimeout(() => {
-                targetElement.style.boxShadow = '';
-            }, 2000);
-            
-            // 5. 终极修复：使用非阻塞轻提示，不再需要强行等待，直接和滑动动画一起触发！
-            showToast(`请先完成第 ${globalIndex + 1} 题`);
+                // 加上红框
+                targetElement.style.transition = 'box-shadow 0.3s';
+                targetElement.style.boxShadow = '0 0 0 4px rgba(200, 80, 50, 0.4)';
+                
+                // 弹出轻提示
+                showToast(`请先完成第 ${globalIndex + 1} 题`);
+                
+                // 2秒后撤销红框
+                setTimeout(() => {
+                    targetElement.style.boxShadow = '';
+                }, 2000);
+            }, 500); // 👈 这个 500ms 就是防止 QQ 浏览器卡住的救命稻草
         }
     }, 150);
 }
