@@ -818,7 +818,7 @@ function displayResult() {
     area.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ========================  彩蛋/走火入魔模式（动静结合节奏版 + 柔和边界扩散） ========================
+// ========================  彩蛋/走火入魔模式（动静结合节奏版 + 柔和边界扩散 + 满屏高飞版） ========================
 function showChaosMode(container, scores) {
     // 每次触发新彩蛋前，强制清理屏幕上可能遗留的跳动文字，防止重叠！
     document.querySelectorAll('.bouncing-char').forEach(el => el.remove());
@@ -829,7 +829,7 @@ function showChaosMode(container, scores) {
     area.style.border = 'none';
     area.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // 1. 注入九秒飞升容器，【新增】：使用 mask-image 制作上下边缘的羽化渐变，消除生硬的边界感
+    // 1. 注入九秒飞升容器，使用 mask-image 制作上下边缘的羽化渐变，消除生硬的边界感
     container.innerHTML = `
         <div id="ascension-scene" style="position: relative; width: 100%; min-height: 80vh; overflow: hidden; 
              -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
@@ -842,7 +842,7 @@ function showChaosMode(container, scores) {
 
     const words = ['☯', '☰', '☱', '☲', '☳', '☴', '☵', '☶', '☷', '🜁', '🜃', '🜂', '🜄', '紫薇讳', '净心神咒', '净口神咒', '净身神咒', '安土地咒', '金光神咒', '祝香神咒', '净天地神咒', '玄蕴咒', '因果', '寂灭', '永恒', '轮回', '虚', '无', '道'];
 
-    // 【新增】：初始颜色调深，使用更沉稳的暗灰和深墨色
+    // 初始颜色调深，使用更沉稳的暗灰和深墨色
     const colors = [
         'rgba(40, 30, 25, 0.9)', 'rgba(60, 50, 45, 0.85)', 
         'rgba(80, 75, 70, 0.8)', 'rgba(30, 30, 35, 0.9)',
@@ -886,14 +886,15 @@ function showChaosMode(container, scores) {
 
             setTimeout(() => {
                 p.style.opacity = '0.8'; // 显现时颜色偏深
-                p.style.top = `-10%`;    
+                
+                // 【修改点 1】：目标高度拔高到 -30%，让文字冲破天际
+                p.style.top = `-30%`;    
 
-                // 【新增】：在飞到一半（50%时间）时就开始变浅并彻底透明化，绝不留残影
+                // 【修改点 2】：把 0.5 改成 0.85，让它飞到 85% 的高度时才开始变透明，填补上方空隙！
                 setTimeout(() => {
                     p.style.opacity = '0';
-                    // 顺便让颜色变浅，产生一种消散感
                     p.style.color = 'rgba(200, 200, 200, 0)'; 
-                }, (duration * 1000) * 0.5);
+                }, (duration * 1000) * 0.85);
 
                 // 彻底从 DOM 中移除，防卡顿
                 setTimeout(() => p.remove(), duration * 1000 + 100);
