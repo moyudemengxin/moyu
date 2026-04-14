@@ -746,6 +746,11 @@ function drawRadar(scores) {
 
 // ========================  结果展示（结合漏题检查与全新排版） ========================
 function displayResult() {
+
+    if (window.chaosRadarInterval) {
+        clearInterval(window.chaosRadarInterval);
+        window.chaosRadarInterval = null; // 彻底清空
+    }
     // 1. 全局检查是否有任何漏题
     const firstUnansweredIndex = userAnswers.findIndex(ans => ans === null);
     
