@@ -811,98 +811,93 @@ function displayResult() {
     area.scrollIntoView({ behavior: 'smooth' });
 }
 
-// ========================  彩蛋/走火入魔模式（全新：羽化飞升与大道解构特效） ========================
+// ========================  彩蛋/走火入魔模式（九秒玄学飞升 + 物理弹跳版） ========================
 function showChaosMode(container, scores) {
     const area = document.getElementById('result-area');
-    
-    // 1. 打破桎梏：直接清除常规的结果框背景和阴影，让它融入整个网页
     area.style.background = 'transparent';
     area.style.boxShadow = 'none';
     area.style.border = 'none';
     area.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // 2. 注入动态飞升场景容器
+    // 1. 注入九秒飞升的容器
     container.innerHTML = `
-        <div id="ascension-scene" style="position: relative; width: 100%; min-height: 65vh; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+        <div id="ascension-scene" style="position: relative; width: 100%; min-height: 80vh; overflow: hidden;">
             <div id="glitch-particles" style="position: absolute; inset: 0; pointer-events: none;"></div>
-            <div id="core-text" style="position: relative; z-index: 10; text-align: center; color: #2b1b0e; width: 100%;"></div>
         </div>
     `;
 
     const particleContainer = document.getElementById('glitch-particles');
-    const coreText = document.getElementById('core-text');
-    // 仙侠与赛博混杂的字符库
-    const chars = '道心无相天地玄黄宇宙洪荒!@#$%^&*()_+☯☰☱☲☳☴☵☶☷01';
 
-    let particleCount = 0;
-    
-    // 3. 制造“层次感飞升”的粒子特效
+    // 玄学词库：太极、八卦、四元素(水火土风)、紫薇讳、八大神咒、道家概念
+    const words = ['☯', '☰', '☱', '☲', '☳', '☴', '☵', '☶', '☷', '🜁', '🜃', '🜂', '🜄', '紫薇讳', '净心神咒', '净口神咒', '净身神咒', '安土地咒', '金光神咒', '祝香神咒', '净天地神咒', '玄蕴咒', '因果', '寂灭', '永恒', '轮回', '虚', '无', '道'];
+
+    // 低饱和度高级配色库（黑、白、灰、极浅的暖灰/冷灰）
+    const colors = [
+        'rgba(255, 255, 255, 0.9)', 'rgba(0, 0, 0, 0.8)', 
+        'rgba(200, 200, 200, 0.7)', 'rgba(80, 80, 80, 0.7)',
+        'rgba(230, 225, 220, 0.8)', 'rgba(40, 45, 50, 0.8)'
+    ];
+
+    let tick = 0;
+    const totalTicks = 300; // 30ms * 300 = 9000ms (整整 9 秒)
+
+    // 2. 密集飞升动画生成器
     const spawnInterval = setInterval(() => {
-        if (particleCount > 50) return; // 生成约50个飞升字符
-        particleCount++;
-
-        const p = document.createElement('div');
-        p.innerText = chars[Math.floor(Math.random() * chars.length)];
-        
-        // 随机层级：前景清晰且快，背景模糊且慢
-        const isForeground = Math.random() > 0.5;
-        const size = isForeground ? (Math.random() * 2 + 1.5) : (Math.random() * 1 + 0.8);
-        const startX = Math.random() * 100; // 横向随机分布
-        const startY = Math.random() * 20 + 80; // 从底部 80%~100% 区域出生
-
-        // 粒子的初始状态
-        p.style.position = 'absolute';
-        p.style.left = `${startX}%`;
-        p.style.top = `${startY}%`;
-        p.style.fontSize = `${size}rem`;
-        p.style.color = isForeground ? '#6b4e2e' : '#d8caba'; // 前景深色，背景浅色
-        p.style.opacity = '0';
-        p.style.filter = isForeground ? 'none' : 'blur(3px)'; // 制造景深层次感
-        p.style.transition = 'all 2s cubic-bezier(0.25, 1, 0.5, 1)'; // 顺滑的上浮动画
-        p.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 90 - 45}deg)`;
-
-        particleContainer.appendChild(p);
-
-        // 延时极短时间后，触发粒子的 CSS 过渡动画（上浮、放大、显现）
-        setTimeout(() => {
-            p.style.opacity = isForeground ? '0.8' : '0.3';
-            p.style.top = `${startY - 40 - Math.random() * 50}%`; // 往上飘 40%~90% 的高度
-            p.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 180 - 90}deg) scale(1.2)`;
-        }, 50);
-
-        // 中心文本的疯狂闪动干扰
-        coreText.innerHTML = `<span style="font-size: clamp(2rem, 8vw, 4rem); letter-spacing: ${Math.random()*20}px; opacity: ${Math.random()}; filter: blur(${Math.random()*3}px)">???</span>`;
-    }, 40); // 每40毫秒吐出一个新粒子
-
-    // 4. 飞升结束，大象无形：呈现终极高级排版
-    setTimeout(() => {
-        clearInterval(spawnInterval);
-        particleContainer.style.opacity = '0'; // 隐去粒子残骸
-        particleContainer.style.transition = 'opacity 1s ease';
-
-        // 如果没有全局动画样式，就临时注入一个淡入效果
-        if(!document.getElementById('chaos-styles')) {
-            const style = document.createElement('style');
-            style.id = 'chaos-styles';
-            style.innerHTML = `
-                @keyframes transcendFade {
-                    0% { opacity: 0; transform: scale(0.95) translateY(10px); filter: blur(8px); }
-                    100% { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
-                }
-            `;
-            document.head.appendChild(style);
+        tick++;
+        if (tick > totalTicks) {
+            clearInterval(spawnInterval);
+            return;
         }
 
-        // 极其惊艳的海报级排版（包含超大水印）
-        coreText.innerHTML = `
-            <div style="animation: transcendFade 2s ease-out forwards; width: 100%;">
-                <div style="position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(8rem, 35vw, 25rem); color: #6b4e2e; opacity: 0.04; white-space: nowrap; z-index: -1; pointer-events: none; font-weight: bold; letter-spacing: -2vw;">
-                    超脱
-                </div>
+        // 每次生成 2-4 个粒子，增加密度
+        const spawnCount = Math.floor(Math.random() * 3) + 2;
+        for (let i = 0; i < spawnCount; i++) {
+            const p = document.createElement('div');
+            p.innerText = words[Math.floor(Math.random() * words.length)];
+            
+            const size = Math.random() * 1.5 + 0.8;
+            const startX = Math.random() * 100;
+            const startY = Math.random() * 20 + 90; // 从底部更下方出生
 
-                <div style="font-size: clamp(3.5rem, 15vw, 5rem); letter-spacing: clamp(10px, 4vw, 24px); margin-bottom: 20px; font-weight: bold; color: #1e1a16;">
-                    超脱
-                </div>
+            p.style.position = 'absolute';
+            p.style.left = `${startX}%`;
+            p.style.top = `${startY}%`;
+            p.style.fontSize = `${size}rem`;
+            p.style.color = colors[Math.floor(Math.random() * colors.length)];
+            p.style.opacity = '0'; // 初始透明
+            p.style.whiteSpace = 'nowrap';
+            p.style.filter = Math.random() > 0.5 ? 'none' : `blur(${Math.random() * 2}px)`;
+            p.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 90 - 45}deg)`;
+            
+            // 上浮时间在 2.5 到 4.5 秒之间
+            const duration = Math.random() * 2 + 2.5;
+            p.style.transition = `top ${duration}s linear, opacity ${duration}s ease-in-out, transform ${duration}s linear`;
+
+            particleContainer.appendChild(p);
+
+            // 极短延迟后触发上浮过渡
+            setTimeout(() => {
+                p.style.opacity = '0.7'; // 显现
+                p.style.top = `-10%`;    // 目标高度：屏幕最顶端之外
+                p.style.transform = `translate(-50%, -50%) rotate(${Math.random() * 180 - 90}deg) scale(1.3)`;
+
+                // 核心：快飘到顶端时，透明度变为0（缓缓隐藏消失）
+                setTimeout(() => {
+                    p.style.opacity = '0';
+                }, (duration * 1000) * 0.65); // 在飞行路程的 65% 处开始渐隐
+
+                // 飞完后销毁 DOM
+                setTimeout(() => p.remove(), duration * 1000);
+            }, 20);
+        }
+    }, 30); // 30ms 极速刷新，保持高密度
+
+    // 3. 九秒后展现终极雷达图与物理弹跳特效
+    setTimeout(() => {
+        // 清理飞升场景，渲染静态真言和雷达图
+        container.innerHTML = `
+            <div class="result-text" style="animation: fadeIn 1.5s ease-in-out; position: relative; z-index: 10;">
+                <div style="height: 60px;"></div>
                 <div style="font-size: clamp(1.1rem, 4.5vw, 1.6rem); letter-spacing: clamp(6px, 2.5vw, 12px); color: #5f4a32; font-weight: 500; margin-bottom: 40px; text-align: center;">
                     万道归虚 不着于相
                 </div>
@@ -912,27 +907,133 @@ function showChaosMode(container, scores) {
             </div>
         `;
 
-        // 5. 动态开启0.5秒一跳的混沌雷达图
+        // 无限鬼畜雷达图
         if(window.chaosRadarInterval) clearInterval(window.chaosRadarInterval);
         window.chaosRadarInterval = setInterval(() => {
             const canvas = document.getElementById('radarChart');
             if(canvas) {
                 const glitchScores = {};
-                DAO_LIST.forEach(dao => {
-                    glitchScores[dao] = Math.random() > 0.5 ? (Math.floor(Math.random() * 15) + 3) : (Math.floor(Math.random() * 5));
-                });
+                DAO_LIST.forEach(dao => { glitchScores[dao] = Math.random() > 0.5 ? (Math.floor(Math.random() * 15) + 3) : (Math.floor(Math.random() * 5)); });
                 drawRadar(glitchScores);
             } else {
                 clearInterval(window.chaosRadarInterval);
             }
         }, 500);
 
-        // 先画出第一帧垫底
         const initialScores = {};
         DAO_LIST.forEach(dao => initialScores[dao] = Math.floor(Math.random() * 10) + 5);
         drawRadar(initialScores);
 
-    }, 2400); // 让飞升粒子飞满 2.4 秒后，展现真相
+        // 4. 【破碎虚空：手机全屏物理弹跳文字】
+        createBouncingText();
+
+    }, 9500); // 耐心等待9.5秒
+}
+
+// ======================== 全屏物理弹跳引擎（双字解构独立弹跳版） ========================
+function createBouncingText() {
+    // 1. 清理可能遗留的旧节点
+    document.querySelectorAll('.bouncing-char').forEach(el => el.remove());
+
+    // 我们要把这两个字拆开，分别赋予生命
+    const chars = ['超', '脱'];
+    const entities = []; // 用来存储各自的物理状态
+
+    chars.forEach((text, index) => {
+        const box = document.createElement('div');
+        box.className = 'bouncing-char';
+        box.innerText = text;
+        
+        // 绝对独立定位
+        box.style.position = 'fixed';
+        box.style.color = '#1e1a16';
+        box.style.fontWeight = 'bold';
+        box.style.zIndex = '9999';
+        
+        // 初始的基础大小就不一样，拉开差距 (3rem 到 4.5rem 之间随机)
+        box.style.fontSize = (Math.random() * 1.5 + 3) + 'rem'; 
+        document.body.appendChild(box);
+
+        // 2. 为每个字初始化【完全独立】的物理参数
+        entities.push({
+            el: box,
+            // 初始位置稍微错开一点，防止重叠
+            x: window.innerWidth / 2 + (index === 0 ? -60 : 60), 
+            y: window.innerHeight / 2,
+            // 随机速度 (3 到 7 之间)
+            vx: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 4 + 3),
+            vy: (Math.random() > 0.5 ? 1 : -1) * (Math.random() * 4 + 3),
+            rotation: 0,
+            // 旋转速度
+            rotSpeed: (Math.random() * 5) - 2.5, 
+            scale: 1,
+            targetScale: Math.random() * 2 + 0.5
+        });
+    });
+
+    // 3. 每秒60帧的物理运算循环
+    function physicsLoop() {
+        // 如果玩家刷新或离开了，停止运算
+        if(document.querySelectorAll('.bouncing-char').length === 0) return;
+
+        // 遍历更新每一个字的物理状态
+        entities.forEach(entity => {
+            const rect = entity.el.getBoundingClientRect();
+            const halfWidth = rect.width / 2;
+            const halfHeight = rect.height / 2;
+
+            let isHit = false;
+
+            // X轴边缘碰撞检测
+            if (entity.x - halfWidth <= 0) {
+                entity.x = halfWidth; // 防卡墙
+                entity.vx *= -1;      // 反弹
+                isHit = true;
+            } else if (entity.x + halfWidth >= window.innerWidth) {
+                entity.x = window.innerWidth - halfWidth;
+                entity.vx *= -1;
+                isHit = true;
+            }
+
+            // Y轴边缘碰撞检测
+            if (entity.y - halfHeight <= 0) {
+                entity.y = halfHeight;
+                entity.vy *= -1;
+                isHit = true;
+            } else if (entity.y + halfHeight >= window.innerHeight) {
+                entity.y = window.innerHeight - halfHeight;
+                entity.vy *= -1;
+                isHit = true;
+            }
+
+            // 如果撞墙了，产生独立异变
+            if (isHit) {
+                // 缩放在 1/3 到 3 倍之间随机
+                entity.targetScale = Math.random() * (3 - 0.33) + 0.33;
+                // 撞击后随机改变旋转狂暴程度
+                entity.rotSpeed = (Math.random() * 8) - 4; 
+            }
+
+            // 移动与旋转累加
+            entity.x += entity.vx;
+            entity.y += entity.vy;
+            entity.rotation += entity.rotSpeed;
+
+            // 平滑缩放过渡 (0.08的缓动系数，让大小变化像呼吸一样丝滑)
+            entity.scale += (entity.targetScale - entity.scale) * 0.08;
+
+            // 渲染到屏幕
+            entity.el.style.left = entity.x + 'px';
+            entity.el.style.top = entity.y + 'px';
+            entity.el.style.transform = `translate(-50%, -50%) rotate(${entity.rotation}deg) scale(${entity.scale})`;
+        });
+
+        // 呼叫下一帧
+        requestAnimationFrame(physicsLoop);
+    }
+
+    // 点火，启动双核物理引擎！
+    physicsLoop();
 }
 
 // ========================  初始化  ========================
